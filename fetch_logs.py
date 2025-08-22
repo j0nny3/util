@@ -1,6 +1,5 @@
 import boto3
-import time
-from datetime import datetime, timedelta, timezone
+from datetime import datetime,  timezone
 import argparse
 import json
 import os
@@ -11,7 +10,7 @@ def parse_time(timestr):
     return int(dt.timestamp() * 1000) 
 
 def fetch_logs(log_group, start_time_ms, end_time_ms, output_file, profile, strip):
-    session = boto3.Session(profile_name = profile, region_name="eu-central-1")
+    boto3.Session(profile_name = profile, region_name="eu-central-1")
     os.environ["AWS_PROFILE"] = profile
     client = boto3.client('logs')
     print("Profile: "+ profile)
@@ -44,7 +43,7 @@ def fetch_logs(log_group, start_time_ms, end_time_ms, output_file, profile, stri
     with open(output_file, "w", encoding="utf-8") as f:
         for event in all_events:
             if strip:
-                message = event.get("message", "")
+                message =event.get("logStreamName","")[-3:]+":" + event.get("message", "")
                 f.write(message + "\n")
             else:
                 f.write(json.dumps(event) + "\n")
